@@ -8,6 +8,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Paper from '@material-ui/core/Paper';
 import SendIcon from '@material-ui/icons/Send';
+import ReplyIcon from '@material-ui/icons/Reply';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -54,11 +55,12 @@ class DebugWindow extends React.Component {
     }
 
     convertMicomMessageToString = data => {
-        function buf2hex(buffer) { // buffer is an ArrayBuffer
+        function buf2hexForPayload(buffer) { // buffer is an ArrayBuffer
             return Array.prototype.map.call(new Uint8Array(buffer), x => ('0' + x.toString(16)).slice(-2)).join(' ');
-          }
-        let command = data.command.toString(16);
-        let payload = buf2hex(data.payload);
+        }
+
+        let command = '0x' + ('0000' + data.command.toString(16)).slice(-4);
+        let payload = buf2hexForPayload(data.payload);
         return [command,payload];
     }
 
@@ -66,8 +68,8 @@ class DebugWindow extends React.Component {
         const {classes, theme} = this.props;
         const micomMessages = this.props.micomMessage.map(data => 
                 <TableRow key={data.id}>
-                <TableCell><SendIcon/></TableCell>
-                <TableCell>{'0x' + this.convertMicomMessageToString(data)[0]}</TableCell>
+                <TableCell>{data.direction === 1?<SendIcon/>:<ReplyIcon/>}</TableCell>
+                <TableCell>{this.convertMicomMessageToString(data)[0]}</TableCell>
                 <TableCell>{this.convertMicomMessageToString(data)[1]}</TableCell>
             </TableRow>
         );

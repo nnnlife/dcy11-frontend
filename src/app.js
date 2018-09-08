@@ -42,6 +42,7 @@ class App extends React.Component {
         drawerOpened: false,
         debugOpened: false,
         messages: [],
+        currentPage: 1,
     }
 
     handleDrawer = (isOpen) => {
@@ -53,7 +54,16 @@ class App extends React.Component {
     }
 
     handleMenu = (index) => {
-        console.log('menu clicked');
+        this.setState({currentPage: index});
+    }
+
+    getCurrentPage = (index) => {
+        switch(this.state.currentPage) {
+        case 1:
+            return (<ControlPage/>);
+        case 2:
+            return (<SetupPage/>);
+        }
     }
 
     componentDidMount() {
@@ -69,6 +79,7 @@ class App extends React.Component {
         const { classes } = this.props;
         let contentStyles = null;
         let appBarStyles = null;
+        let content = this.getCurrentPage(this.state.currentPage);
 
         if (this.state.debugOpened) {
             contentStyles = classes.contentWithDebug;
@@ -76,6 +87,8 @@ class App extends React.Component {
         }
         else
             contentStyles = classes.content;
+
+        
 
         return (
             <div className={classes.root}>
@@ -86,7 +99,7 @@ class App extends React.Component {
                 {this.state.debugOpened && <DebugWindow micomMessage={this.state.messages} width={classes.debug}/>}
                 <main className={contentStyles}>
                     <div className={classes.toolbar} />
-                    <ControlPage/>
+                    {content}
                 </main>
             </div>
         );

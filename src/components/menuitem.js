@@ -23,19 +23,19 @@ export function menuItem(handler) {
                 </ListItemIcon>
                 <ListItemText primary='Control'/>
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={() => handler(2)}>
                 <ListItemIcon>
                     <ControlIcon/>
                 </ListItemIcon>
                 <ListItemText primary='Setup'/>
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={() => handler(3)}>
                 <ListItemIcon>
                     <FormatListIcon />
                 </ListItemIcon>
                 <ListItemText primary='Test Cases'/>
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={() => handler(4)}>
                 <ListItemIcon>
                     <PollIcon />
                 </ListItemIcon>
