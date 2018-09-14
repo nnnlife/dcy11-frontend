@@ -71,7 +71,6 @@ class App extends React.Component {
             let messages = this.state.messages;
             messages.push(data);
             this.setState({messages: messages});
-            console.log('current message ', messages);
         });
     }
 
