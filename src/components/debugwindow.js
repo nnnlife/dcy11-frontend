@@ -20,24 +20,6 @@ const styles = {
 
 };
 
-function TabContainer({ children, dir }) {
-    return (
-      <Paper>
-          <Table>
-              <TableHead>
-                  <TableRow>
-                  <TableCell>Dir</TableCell>
-                  <TableCell>Command</TableCell>
-                  <TableCell>Payload</TableCell>
-                  </TableRow>
-              </TableHead>
-              <TableBody>
-                  {children}
-              </TableBody>
-          </Table>
-      </Paper>
-    );
-  }
   
 
 class DebugWindow extends React.Component {
@@ -63,10 +45,27 @@ class DebugWindow extends React.Component {
         return [command,payload];
     }
 
+    componentDidMount() {
+        console.log('component did mount');
+        this.scrollToBottom();
+    }
+
+    scrollToBottom = () => {
+        if (this.table) {
+            let rows = this.table.getElementsByTagName('tr');
+            let lastTr = rows.item(rows.length - 1).scrollIntoView();
+        }
+    }
+
+    componentDidUpdate() {
+        console.log('component did update');
+        this.scrollToBottom();
+    }
+
     render() {
         const {classes, theme} = this.props;
-        const micomMessages = this.props.micomMessage.map(data => 
-                <TableRow key={data.id}>
+        const micomMessages = this.props.micomMessage.map((data, index) => 
+                <TableRow key={index}>
                 <TableCell>{data.direction === 1?<SendIcon/>:<ReplyIcon/>}</TableCell>
                 <TableCell>{this.convertMicomMessageToString(data)[0]}</TableCell>
                 <TableCell>{this.convertMicomMessageToString(data)[1]}</TableCell>
@@ -79,26 +78,19 @@ class DebugWindow extends React.Component {
                 anchor={'right'}
                 open={true}
             >
-                <div className={this.props.width}>
-                    <Tabs
-                        value={this.state.value}
-                        onChange={this.handleChange}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        fullWidth
-                    >
-                        <Tab label="DEBUG" />
-                        <Tab label="Android Logs" />
-                    </Tabs>
-                    <SwipeableViews position='absolute'
-                        index={this.state.value}
-                        onChangeIndex={this.handleChangeIndex}
-                    >
-                        <TabContainer dir={theme.direction}>
-                            {micomMessages}
-                        </TabContainer>
-                        <TabContainer dir={theme.direction}>Item Two</TabContainer>
-                    </SwipeableViews>
+                <div className={this.props.width} ref={el => this.table = el}>
+          <Table>
+              <TableHead>
+                  <TableRow>
+                  <TableCell>Dir</TableCell>
+                  <TableCell>Command</TableCell>
+                  <TableCell>Payload</TableCell>
+                  </TableRow>
+              </TableHead>
+              <TableBody>
+                  {micomMessages}
+              </TableBody>
+          </Table>
                 </div>
             </Drawer>
         );
